@@ -41,13 +41,12 @@ class App(customtkinter.CTk):
         values=["Beast", "Construct", "Demon", "Humanoid", "Monster", "Plant", "Undead"])
         self.species_frame.grid(row=2, column=1, rowspan=2, padx=(0, 10), pady=(10, 0), sticky="news")
 
-        self.next = customtkinter.CTkButton(self, text="Next", command=self.secondPage)
+        self.next = customtkinter.CTkButton(self, text="Next", command=self.pageOneDataCheck)
         self.next.grid(row=4, column=1, padx=10, pady=10, sticky="ne")
         self.back = customtkinter.CTkButton(self, text="Back", command=self.back_button_callback)
         self.back.grid(row=4, column=0, padx=10, pady=10, sticky="nw")
     
-    def secondPage(self):
-
+    def pageOneDataCheck(self):
         #Get data from first page before moving on
         name = self.name_frame.entry.get()
         level = self.level_frame.entry.get()
@@ -68,6 +67,9 @@ class App(customtkinter.CTk):
         elif not level.isdigit():
             if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
                 self.toplevel_window = errorWindow.levelIntError(self)
+        elif (int(level) > 60) or (int(level) < 5):
+            if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+                self.toplevel_window = errorWindow.levelRangeError(self)
         elif not stat_array:
             if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
                 self.toplevel_window = errorWindow.statError(self)
@@ -75,27 +77,37 @@ class App(customtkinter.CTk):
             if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
                 self.toplevel_window = errorWindow.speciesError(self)
         else:
+            
+            #Close popup if error was fixed and user moves on
+            if self.toplevel_window:
+                self.toplevel_window.destroy()
+                self.toplevel_window = None
+
             newNPC = NPCDataHandler.NPCEntry(name, identity, level, stat_array, species)
             NPCDataHandler.addNPC(newNPC)
-
+            
+            #Clear frame and move to next page
+            frames.clearFrame(self)
+            self.secondPage
+        
         if self.toplevel_window:
             self.toplevel_window.after(10, self.toplevel_window.lift)
-        
-        #Clear frame and add new elements
-        frames.clearFrame(self)
+
+
+    def secondPage(self):
 
         #Page 2
 
-        self.next = customtkinter.CTkButton(self, text="Next", command=self.next_two_button_callback)
+        self.next = customtkinter.CTkButton(self, text="Next", command=self.pageThree)
         self.next.grid(row=4, column=1, padx=10, pady=10, sticky="ne")
-        self.back = customtkinter.CTkButton(self, text="Back", command=self.firstPage())
+        self.back = customtkinter.CTkButton(self, text="Back", command=self.firstPage)
         self.back.grid(row=4, column=0, padx=10, pady=10, sticky="nw")
     
     def back_button_callback(self):
         #Just clears the page, expand
         frames.clearFrame(self)
     
-    def next_two_button_callback(self):
+    def pageThree(self):
         print("Working")
 
     
