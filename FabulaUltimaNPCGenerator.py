@@ -15,7 +15,12 @@ class App(customtkinter.CTk):
         self.minsize(450, 550)
 
         self.toplevel_window = None
+        self.firstPage()
 
+    def firstPage(self):
+
+        frames.clearFrame(self)
+        #First Page
         self.name_frame = frames.MyTextBoxFrame(self, "NPC Name", values=["Bertrum Lorefinder"])
         self.name_frame.grid(row=0, column=0, columnspan = 2, padx=10, pady=10, sticky="new")
         
@@ -36,12 +41,14 @@ class App(customtkinter.CTk):
         values=["Beast", "Construct", "Demon", "Humanoid", "Monster", "Plant", "Undead"])
         self.species_frame.grid(row=2, column=1, rowspan=2, padx=(0, 10), pady=(10, 0), sticky="news")
 
-        self.next = customtkinter.CTkButton(self, text="Next", command=self.button_callback)
+        self.next = customtkinter.CTkButton(self, text="Next", command=self.secondPage)
         self.next.grid(row=4, column=1, padx=10, pady=10, sticky="ne")
-        self.back = customtkinter.CTkButton(self, text="Back", command=self.button_callback)
+        self.back = customtkinter.CTkButton(self, text="Back", command=self.back_button_callback)
         self.back.grid(row=4, column=0, padx=10, pady=10, sticky="nw")
+    
+    def secondPage(self):
 
-    def button_callback(self):
+        #Get data from first page before moving on
         name = self.name_frame.entry.get()
         level = self.level_frame.entry.get()
         identity = self.identity_frame.entry.get()
@@ -73,6 +80,25 @@ class App(customtkinter.CTk):
 
         if self.toplevel_window:
             self.toplevel_window.after(10, self.toplevel_window.lift)
+        
+        #Clear frame and add new elements
+        frames.clearFrame(self)
+
+        #Page 2
+
+        self.next = customtkinter.CTkButton(self, text="Next", command=self.next_two_button_callback)
+        self.next.grid(row=4, column=1, padx=10, pady=10, sticky="ne")
+        self.back = customtkinter.CTkButton(self, text="Back", command=self.firstPage())
+        self.back.grid(row=4, column=0, padx=10, pady=10, sticky="nw")
+    
+    def back_button_callback(self):
+        #Just clears the page, expand
+        frames.clearFrame(self)
+    
+    def next_two_button_callback(self):
+        print("Working")
+
+    
 
 
 app = App()

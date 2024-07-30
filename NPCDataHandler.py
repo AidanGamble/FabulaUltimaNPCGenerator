@@ -36,3 +36,13 @@ def addNPC(newNPC):
     for keys in db:
         print(keys, "=>", db[keys])
     dbfile.close()
+
+def readNPC(NPC):
+    dbfile = open("NPCData", "rb")
+    db = pickle.load(dbfile)
+    result = db.get(NPC)
+    dbfile.close
+
+    if result:
+        return result
+    return None

@@ -1,5 +1,10 @@
 import customtkinter
 
+def clearFrame(frame):
+    for widget in frame.winfo_children():
+        widget.destroy()
+
+
 class MyCheckboxFrame(customtkinter.CTkFrame):
     def __init__(self, master, title, values):
         super().__init__(master)
